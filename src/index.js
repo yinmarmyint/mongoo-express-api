@@ -1,6 +1,9 @@
 const express = require("express");
-const app = express();
+const cors = require("cors");
 const bodyParser = require("body-parser");
+const book_controller = require("./books/route/book_route");
+
+// require("./books/controller/book_controller");
 
 const mongoose = require("mongoose");
 
@@ -11,8 +14,14 @@ mongoose.connect(
   }
 );
 
+const app = express();
+
+app.use(cors());
+
 app.use(bodyParser.json());
 
-app.post("/book", (req, res) => {
-  console.log(req.body);
+app.use("/books", book_controller);
+
+app.listen("8080", () => {
+  console.log("API is running");
 });
