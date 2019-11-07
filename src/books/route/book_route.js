@@ -2,6 +2,20 @@ const express = require("express");
 const router = express.Router();
 const Book = require("../model/Book");
 
+async function getOneBook(req, res, next) {
+  try {
+    book = await Book.findById(req.params.id);
+    if (book == null) {
+      return res.status(404).json({ message: "Cant find any books" });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+
+  res.book = book;
+  next();
+}
+
 // Get all books
 router.get("/", async (req, res) => {
   try {
@@ -13,7 +27,9 @@ router.get("/", async (req, res) => {
 });
 
 // Get one book
-router.get("/:id", (req, res) => {});
+router.get("/:id", getOneBook, (req, res) => {
+  res.json(res.book);
+});
 
 // Create one book
 router.post("/", async (req, res) => {
@@ -32,7 +48,30 @@ router.post("/", async (req, res) => {
 });
 
 // Update one book
-router.patch("/:id", (req, res) => {});
+router.patch("/:id", (req, res) => {
+  router.patch("/:id", getOneBook, async (req, res) => {
+    if (req.body.title != null) {
+      res.book.title = req.body.title;
+    }
+
+    if (req.body.author != null) {
+      res.subscriber.author = req.body.author;
+    }
+
+    if (req.body.numberOfPages != null) {
+      res.subscriber.numberOfPages = req.body.numberOfPages;
+    }
+    if (req.body.publisher != null) {
+      res.subscriber.publisher = req.body.publisher;
+    }
+    try {
+      const updatedBook = await res.book.save();
+      res.json(updatedBook);
+    } catch {
+      res.status(400).json({ message: err.message });
+    }
+  });
+});
 
 // Delete one book
 router.delete("/:id", (req, res) => {});
