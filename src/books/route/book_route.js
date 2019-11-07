@@ -33,8 +33,14 @@ router.post("/", async (req, res) => {
 
 // Update one book
 router.patch("/:id", (req, res) => {});
-
 // Delete one book
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", (req, res) => {
+  try {
+    Book.findOneAndDelete({ _id: req.params.id });
+    res.status(203);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 module.exports = router;
