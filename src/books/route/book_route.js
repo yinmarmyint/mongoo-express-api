@@ -74,6 +74,22 @@ router.patch("/:id", (req, res) => {
 });
 
 // Delete one book
-router.delete("/:id", (req, res) => {});
+// router.delete("/:id", (req, res) => {
+//   try {
+//     Book.findOneAndDelete({ _id: req.params.id });
+//     res.status(203);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+router.delete("/:id", getOneBook, async (req, res) => {
+  try {
+    await res.book.remove();
+    res.json({ message: "Deleted This BOOK" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 module.exports = router;
