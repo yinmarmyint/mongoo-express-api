@@ -48,40 +48,29 @@ router.post("/", async (req, res) => {
 });
 
 // Update one book
-router.patch("/:id", (req, res) => {
-  router.patch("/:id", getOneBook, async (req, res) => {
-    if (req.body.title != null) {
-      res.book.title = req.body.title;
-    }
+router.put("/:id", getOneBook, async (req, res) => {
+  console.log("req ====>", req.body);
+  if (req.body.title != null) {
+    res.book.title = req.body.title;
+  }
 
-    if (req.body.author != null) {
-      res.subscriber.author = req.body.author;
-    }
+  if (req.body.author != null) {
+    res.book.author = req.body.author;
+  }
 
-    if (req.body.numberOfPages != null) {
-      res.subscriber.numberOfPages = req.body.numberOfPages;
-    }
-    if (req.body.publisher != null) {
-      res.subscriber.publisher = req.body.publisher;
-    }
-    try {
-      const updatedBook = await res.book.save();
-      res.json(updatedBook);
-    } catch {
-      res.status(400).json({ message: err.message });
-    }
-  });
+  if (req.body.numberOfPages != null) {
+    res.book.numberOfPages = req.body.numberOfPages;
+  }
+  if (req.body.publisher != null) {
+    res.book.publisher = req.body.publisher;
+  }
+  try {
+    const updatedBook = await res.book.save();
+    res.json(updatedBook);
+  } catch {
+    res.status(400).json({ message: err.message });
+  }
 });
-
-// Delete one book
-// router.delete("/:id", (req, res) => {
-//   try {
-//     Book.findOneAndDelete({ _id: req.params.id });
-//     res.status(203);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
 
 router.delete("/:id", getOneBook, async (req, res) => {
   try {
